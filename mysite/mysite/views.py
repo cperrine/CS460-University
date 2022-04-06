@@ -1,8 +1,21 @@
 from django.http import HttpResponse
 import mysql.connector
+#from django.views.decorators import csrf exempt
 
 def index(request):
-    return HttpResponse("Hello, world. \nAgain")
+    form='<!DOCTYPE html>' +\
+    '<html>' +\
+    '<body>' +\
+    '<h1>Display the name of instructors who earn more than:</h1>'+\
+    '<form action="instructor/" method="post">' +\
+        '<label for="amount">$</label>' +\
+        '<input type="text" id="amount" name="amount"><br><br>' +\
+        '<input type="submit" value="Submit">' +\
+    '</form>' +\
+    '</body>/' +\
+    '</html>'
+    return HttpResponse('Hello, this is the index page')
+    
 def student(request):
     mydb = mysql.connector.connect(
     host="localhost",
@@ -32,6 +45,8 @@ def student(request):
     mycursor.close()
     mydb.close()
     return HttpResponse(data)
+    
+#@csrf_exempt
 def instructor(request):
     mydb = mysql.connector.connect(
     host="localhost",
@@ -43,7 +58,9 @@ def instructor(request):
     
     mycursor = mydb.cursor()
     
-    mycursor.execute('select * from instructor;')
+    sal=80000
+    query=f'SELECT * FROM instructor WHERE salary > {sal};'
+    mycursor.execute(query)
     
     data = '<table style="width:400px">'
     for (id,name,dept,salary) in mycursor:
