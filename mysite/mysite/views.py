@@ -1,6 +1,9 @@
 from django.http import HttpResponse
 import mysql.connector
+from django.shortcuts import render
 #from django.views.decorators import csrf exempt
+
+
 
 def index(request):
     form='<!DOCTYPE html>' +\
@@ -58,7 +61,7 @@ def instructor(request):
     
     mycursor = mydb.cursor()
     
-    sal=80000
+    sal= 80000
     query=f'SELECT * FROM instructor WHERE salary > {sal};'
     mycursor.execute(query)
     
