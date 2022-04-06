@@ -1,0 +1,14 @@
+f1 select professors from instructor order by NAME, DEPT, OR SALARY
+
+f2 select avg(salary), max(salary), min(salary) from instructor group by DEPT
+
+f3 select professor,dept, count(students) from takes, teaches, instrcutor where professor = XX and semester = XX and year = XX
+
+
+f4 is a section id,count of the number of discrete student ids, grouped by section and semester
+select sectionid, count(studentid) from takes,teaches where sectionid = XX and semester = XX and group by sectionid
+
+f5 select studentid, student from student,teaches, where instructorid = XX and sectionid= XX semester = XX and year = XX
+
+
+f6 select courseid, section, semester, year, department from section, department where department = XX and Semester = XX and year =XX
