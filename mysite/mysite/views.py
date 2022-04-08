@@ -78,7 +78,7 @@ def instructor(request):
     mycursor.close()
     mydb.close()
     return HttpResponse(data)
-def administrator(request):
+def administrator_f2(request):
     mydb = mysql.connector.connect(
     host="localhost",
     user="root",
@@ -89,14 +89,16 @@ def administrator(request):
     
     mycursor = mydb.cursor()
     
-    mycursor.execute('select * from department;')
+    query1 = 'select min(salary), avg(salary), max(salary), dept from instructor group by dept;'
+    mycursor.execute(query1)
     
     data = '<table style="width:400px">'
-    for (dept_name,building, budget) in mycursor:
-        r= ('<tr>'+ \
-            '<th>' + dept_name + '</th>'+\
-            '<th>' + building + '</th>'+\
-            '<th>' + str(budget) + '</th>'+\
+    for (min(salary),avg(salary), max(salary), dept) in mycursor:
+        r = ('<tr>'+\
+            '<th>' + str(min(salary)) + '</th>'+\
+            '<th>' + str(avg(salary)) + '</th>'+\
+            '<th>' + str(max(salary)) + '</th>'+\
+            '<th>' + str(dept) + '</th>'+\
             '</tr>')
         data += r
     data += '</table>'

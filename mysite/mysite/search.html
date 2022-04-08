@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1> Sort Instructors By:</h1>
+
+<form action='/instructor' method='post'>
+          Sort By:
+			<select name='type'>
+			<option
+			{%if object.data[0].type == 'name' %}
+			 selected = 'true' 
+			{% endif %}
+			value = 'name'> Name </option>
+			<option
+			{%if object.data[0].type == 'dept' %}
+			 selected = 'true' 
+			{% endif %}
+			value = 'dept'> Department </option>
+			<option
+			{%if object.data[0].type == 'salary' %}
+			 selected = 'true' 
+			{% endif %}
+			value = 'salary'> Salary </option>
+			</select> <br/>
+			<input type='submit' value = 'save'/>
+			</form>
+				</div>
+			
+			
+</body>
+</html>
