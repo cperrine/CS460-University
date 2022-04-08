@@ -68,7 +68,7 @@ def instructor(request):
     data = '<table style="width:400px">'
     for (id,name,dept,salary) in mycursor:
         r= ('<tr>'+ \
-            '<th>' + str(id)+'</th>'+\
+            '<th>' + str(id) +'</th>'+\
             '<th>' + name + '</th>'+\
             '<th>' + dept + '</th>'+\
             '<th>' + str(salary) + '</th>'+\
@@ -89,7 +89,7 @@ def administrator_f2(request):
     
     mycursor = mydb.cursor()
     
-    query1 = 'select min(salary), avg(salary), max(salary), dept from instructor group by dept;'
+    query1 = 'select min(salary), avg(salary) , max(salary), dept from instructor group by dept;'
     mycursor.execute(query1)
     
     data = '<table style="width:400px">'
@@ -97,8 +97,8 @@ def administrator_f2(request):
         r = ('<tr>'+\
             '<th>' + str(min(salary)) + '</th>'+\
             '<th>' + str(avg(salary)) + '</th>'+\
-            '<th>' + str(max(salary)) + '</th>'+\
-            '<th>' + str(dept) + '</th>'+\
+            '<th>' + str(avg(salary)) + '</th>'+\
+            '<th>' + dept + '</th>'+\
             '</tr>')
         data += r
     data += '</table>'
