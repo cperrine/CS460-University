@@ -89,7 +89,8 @@ def administrator_f2(request):
     
     mycursor = mydb.cursor()
     
-    mycursor.execute('select min(salary), avg(salary), max(salary), dept from instructor group by dept;')
+    query1 = 'select min(salary), avg(salary), max(salary), dept from instructor group by dept;'
+    mycursor.execute(query1)
     
     data = '<table style="width:400px">'
     for (min(salary),avg(salary), max(salary), dept) in mycursor:
