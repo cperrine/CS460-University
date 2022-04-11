@@ -1,9 +1,9 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 import mysql.connector
 from django.shortcuts import render
-#from django.views.decorators import csrf exempt
+from django.views.decorators.csrf import csrf_exempt
 
-
+my_passward = "" #put your passward here
 
 def index(request):
     form='<!DOCTYPE html>' +\
@@ -17,72 +17,189 @@ def index(request):
     '</form>' +\
     '</body>/' +\
     '</html>'
-    return HttpResponse('Hello, this is the index page')
-    
+    return HttpResponse("placeholder")
+
+@csrf_exempt
 def student(request):
-    mydb = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    passwd="Snaildog13!",    #USE YOUR PASSWORD
-    auth_plugin='mysql_native_password',
-    database="university",
-    )
-    
-    mycursor = mydb.cursor()
-    
-    mycursor.execute('select * from section;')
-    
-    data = '<table style="width:400px">'
-    for (course_id,sec_id,semester,year,building,room,capacity) in mycursor:
-        r= ('<tr>'+ \
-            '<th>' + course_id+'</th>'+\
-            '<th>' + str(sec_id) + '</th>'+\
-            '<th>' + str(semester) + '</th>'+\
-            '<th>' + str(year) + '</th>'+\
-            '<th>' + building + '</th>'+\
-            '<th>' + str(room) + '</th>'+\
-            '<th>' + str(capacity) + '</th>'+\
-            '</tr>')
-        data += r
-    data += '</table>'
-    mycursor.close()
-    mydb.close()
+    try:
+        department = request.POST['department']
+        year = request.POST['year']
+        semester = request.POST['semester']
+    except:
+        data='<!DOCTYPE html>' +\
+            '<html>' +\
+            '<body>' +\
+            '<h1>Student Form:</h1>'+\
+            '<form action="" method="post">' +\
+                '<label for="department">department: </label>' +\
+                '<input type="text" id="department" name="department"><br><br>' +\
+                '<label for="year">year: </label>' +\
+                '<input type="text" id="year" name="year"><br><br>' +\
+                '<label for="semester">semester: </label>' +\
+                '<input type="text" id="semester" name="semester"><br><br>' +\
+                '<input type="submit" value="Submit">' +\
+            '</form>' +\
+            '</body>/' +\
+            '</html>'
+    else:
+        mydb = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        passwd=my_passward,
+        auth_plugin='mysql_native_password',
+        database="university",
+        )
+        mycursor = mydb.cursor()
+        
+        mycursor.execute(f'select section.course_id, section.sec_id, course.title, course.credits, section.building, section.room, section.capacity  from course inner join section on course.course_id = section.course_id where dept_name = "{department}" and semester = {semester} and year = {year};')
+        
+        data = '<table style="width:400px">'
+        for (course_id, section_id, title,credits,building,room,capacity) in mycursor:
+            r= ('<tr>'+ \
+                '<th>Course: ' + course_id+'</th>'+\
+                '<th>Section: ' + section_id+'</th>'+\
+                '<th>Title: ' + title + '</th>'+\
+                '<th>Credits: ' + str(credits) + '</th>'+\
+                '<th>Building: ' + building + '</th>'+\
+                '<th>Room: ' + str(room) + '</th>'+\
+                '<th>Capacity: ' + str(capacity) + '</th>'+\
+                '</tr>')
+            data += r
+        data += '</table>'
+        mycursor.close()
+        mydb.close()
     return HttpResponse(data)
     
-#@csrf_exempt
+@csrf_exempt
 def instructor(request):
-    mydb = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    passwd="Snaildog13!",
-    auth_plugin='mysql_native_password',
-    database="university",
-    )
-    
-    mycursor = mydb.cursor()
-    
-    sal= 80000
-    query=f'SELECT * FROM instructor WHERE salary > {sal};'
-    mycursor.execute(query)
-    
-    data = '<table style="width:400px">'
-    for (id,name,dept,salary) in mycursor:
-        r= ('<tr>'+ \
-            '<th>' + str(id) +'</th>'+\
-            '<th>' + name + '</th>'+\
-            '<th>' + dept + '</th>'+\
-            '<th>' + str(salary) + '</th>'+\
-            '</tr>')
-        data += r
-    data += '</table>'
-    mycursor.close()
-    mydb.close()
+    try:
+        #instructor_name = request.POST['instructor_name']
+        instructor_id = request.POST['instructor_id']
+        semester = request.POST['semester']
+        year = request.POST['year']
+    except:
+        data='<!DOCTYPE html>' +\
+            '<html>' +\
+            '<body>' +\
+            '<h1>Instructor Form:</h1>'+\
+            '<form action="" method="post">' +\
+                '<label for="instructor_name">Instructor Name: </label>' +\
+                '<input type="text" id="instructor_name" name="instructor_name"><br><br>' +\
+                '<label for="instructor_id">Instructor ID: </label>' +\
+                '<input type="text" id="instructor_id" name="instructor_id"><br><br>' +\
+                '<label for="semester">Semester: </label>' +\
+                '<input type="text" id="semester" name="semester"><br><br>' +\
+                '<label for="year">Year: </label>' +\
+                '<input type="text" id="year" name="year"><br><br>' +\
+                '<input type="submit" value="Submit">' +\
+            '</form>' +\
+            '</body>/' +\
+            '</html>'
+    else:
+        mydb = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        passwd=my_passward,
+        auth_plugin='mysql_native_password',
+        database="university",
+        )
+        
+        mycursor = mydb.cursor()
+
+        query=f'select t1.course_id, t1.sec_id, t1.building, t1.room, t1.capacity, count(grade) as students from (select s.course_id, s.sec_id, s.semester, s.year, s.building, s.room, s.capacity from section s inner join teaches t on s.course_id = t.course_id and s.sec_id = t.sec_id and s.semester = t.semester and s.year = t.year where t.id = {instructor_id} and t.semester = {semester} and t.year = {year}) as t1 left join takes t2 on t1.course_id = t2.course_id and t1.sec_id = t2.sec_id and t1.semester = t2.semester and t1.year = t2.year group by t1.course_id, t1.sec_id, t1.semester, t1.year;'
+        mycursor.execute(query)
+        
+        data = '<table style="width:400px">'
+        for (course_id,sec_id,building,room,capacity,students) in mycursor:
+            r= ('<tr>'+ \
+                '<th>Course:  ' + str(course_id) +'</th>'+\
+                '<th>Section: ' + str(sec_id) + '</th>'+\
+                '<th>Building: ' + building + '</th>'+\
+                '<th>Room: ' + str(room) + '</th>'+\
+                '<th>Capacity: ' + str(capacity) + '</th>'+\
+                '<th>Students: ' + str(students) + '</th>'+\
+                '</tr>')
+            data += r
+        data += '</table>'
+        mycursor.close()
+        mydb.close()
+
+        data += f'<h1>Section Form:</h1>'+\
+            '<form action="section" method="post">' +\
+                '<label for="instructor_id">Instructor ID: </label>' +\
+                '<input type="text" id="instructor_id" name="instructor_id" value="' + instructor_id + '"><br><br>' +\
+                '<label for="semester">Semester: </label>' +\
+                '<input type="text" id="semester" name="semester" value="' + semester + '"><br><br>' +\
+                '<label for="year">Year: </label>' +\
+                '<input type="text" id="year" name="year" value="' + year + '"><br><br>' +\
+                '<label for="course_id">Course: </label>' +\
+                '<input type="text" id="course_id" name="course_id"><br><br>' +\
+                '<label for="sec_id">section: </label>' +\
+                '<input type="text" id="sec_id" name="sec_id"><br><br>' +\
+                '<input type="submit" value="Submit">' +\
+            '</form>' +\
+            '</body>/' +\
+            '</html>'
     return HttpResponse(data)
+
+@csrf_exempt
+def section(request):
+    try:
+        instructor_id = request.POST['instructor_id']
+        semester = request.POST['semester']
+        year = request.POST['year']
+        course_id = request.POST['course_id']
+        sec_id = request.POST['sec_id']
+    except:
+        data = f'<h1>Section Form:</h1>'+\
+            '<form action="section" method="post">' +\
+                '<label for="instructor_id">Instructor ID: </label>' +\
+                '<input type="text" id="instructor_id" name="instructor_id"><br><br>' +\
+                '<label for="semester">Semester: </label>' +\
+                '<input type="text" id="semester" name="semester"><br><br>' +\
+                '<label for="year">Year: </label>' +\
+                '<input type="text" id="year" name="year"><br><br>' +\
+                '<label for="course_id">Course: </label>' +\
+                '<input type="text" id="course_id" name="course_id"><br><br>' +\
+                '<label for="sec_id">section: </label>' +\
+                '<input type="text" id="sec_id" name="sec_id"><br><br>' +\
+                '<input type="submit" value="Submit">' +\
+            '</form>' +\
+            '</body>/' +\
+            '</html>'
+    else:
+        mydb = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        passwd=my_passward,
+        auth_plugin='mysql_native_password',
+        database="university",
+        )
+        
+        mycursor = mydb.cursor()
+
+        query=f'select s.ID, s.name, s.dept_name, s.tot_cred from (select t1.course_id, t1.sec_id, t1.building, t1.room, t1.capacity, t2.ID from (select s.course_id, s.sec_id, s.semester, s.year, s.building, s.room, s.capacity from section s inner join teaches t on s.course_id = t.course_id and s.sec_id = t.sec_id and s.semester = t.semester and s.year = t.year where t.id = {instructor_id} and t.semester = {semester} and t.year = {year} and t.course_id = "{course_id}" and t.sec_id = {sec_id}) as t1 left join takes t2 on t1.course_id = t2.course_id and t1.sec_id = t2.sec_id and t1.semester = t2.semester and t1.year = t2.year) as t3 join student s on t3.ID = s.ID;'
+        mycursor.execute(query)
+        
+        data = '<table style="width:400px">'
+        for (id,name,dept_name,tot_cred) in mycursor:
+            r= ('<tr>'+ \
+                '<th>ID: ' + str(id) +'</th>'+\
+                '<th>Name: ' + name + '</th>'+\
+                '<th>Department: ' + dept_name + '</th>'+\
+                '<th>Total Credits: ' + str(tot_cred) + '</th>'+\
+                '</tr>')
+            data += r
+        data += '</table>'
+        mycursor.close()
+        mydb.close()
+    return HttpResponse(data)
+
 def administrator_f2(request):
     mydb = mysql.connector.connect(
     host="localhost",
     user="root",
-    passwd="Snaildog13!",  #USE YOUR PASSWORD
+    passwd=my_passward,
     auth_plugin='mysql_native_password',
     database="university",
     )
