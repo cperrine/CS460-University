@@ -6,18 +6,22 @@ from django.views.decorators.csrf import csrf_exempt
 my_passward = "" #put your passward here
 
 def index(request):
-    form='<!DOCTYPE html>' +\
+    data='<!DOCTYPE html>' +\
     '<html>' +\
     '<body>' +\
-    '<h1>Display the name of instructors who earn more than:</h1>'+\
+    '<h1>Main Page:</h1>'+\
+    '<form action="student/" method="post">' +\
+        '<input type="submit" value="Student">' +\
+    '</form>' +\
     '<form action="instructor/" method="post">' +\
-        '<label for="amount">$</label>' +\
-        '<input type="text" id="amount" name="amount"><br><br>' +\
-        '<input type="submit" value="Submit">' +\
+        '<input type="submit" value="Instructor">' +\
+    '</form>' +\
+    '<form action="admin/" method="post">' +\
+        '<input type="submit" value="Admin">' +\
     '</form>' +\
     '</body>/' +\
     '</html>'
-    return HttpResponse("placeholder")
+    return HttpResponse(data)
 
 @csrf_exempt
 def student(request):
