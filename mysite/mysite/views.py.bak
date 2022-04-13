@@ -16,8 +16,27 @@ def index(request):
     '<form action="instructor/" method="post">' +\
         '<input type="submit" value="Instructor">' +\
     '</form>' +\
-    '<form action="admin/" method="post">' +\
+    '<form action="administrator_view/" method="post">' +\
         '<input type="submit" value="Admin">' +\
+    '</form>' +\
+    '</body>/' +\
+    '</html>'
+    return HttpResponse(data)
+
+
+def administrator_view(request):
+    data='<!DOCTYPE html>' +\
+    '<html>' +\
+    '<body>' +\
+    '<h1>Administrator View:</h1>'+\
+    '<form action="administrator_f1/" method="post">' +\
+        '<input type="submit" value="List of Professors">' +\
+    '</form>' +\
+    '<form action="administrator_f2/" method="post">' +\
+        '<input type="submit" value="Average Salaries">' +\
+    '</form>' +\
+    '<form action="administrator_f3/" method="post">' +\
+        '<input type="submit" value="Number of Students Taught">' +\
     '</form>' +\
     '</body>/' +\
     '</html>'
@@ -239,11 +258,11 @@ def administrator_f1(request):
     except:
         data = f'<h1>Order Instructors By:</h1>'+\
             '<form action="section" method="post">' +\
-                '<label for="name">Instructor name: </label>' +\
+                '<label for="name">Instructor name </label>' +\
                 '<input type="checkbox" id="name" name="name"><br><br>' +\
-                '<label for="dept">Department: </label>' +\
+                '<label for="dept">Department </label>' +\
                 '<input type="checkbox" id="dept" name="dept"><br><br>' +\
-                '<label for="salary">Salary: </label>' +\
+                '<label for="salary">Salary </label>' +\
                 '<input type="checkbox" id="salary" name="salary"><br><br>' +\
                 '<input type="submit" value="Submit">' +\
             '</form>' +\

@@ -16,8 +16,27 @@ def index(request):
     '<form action="instructor/" method="post">' +\
         '<input type="submit" value="Instructor">' +\
     '</form>' +\
-    '<form action="admin/" method="post">' +\
+    '<form action="administrator_view/" method="post">' +\
         '<input type="submit" value="Admin">' +\
+    '</form>' +\
+    '</body>/' +\
+    '</html>'
+    return HttpResponse(data)
+
+@csrf_exempt
+def administrator_view(request):
+    data='<!DOCTYPE html>' +\
+    '<html>' +\
+    '<body>' +\
+    '<h1>Administrator View:</h1>'+\
+    '<form action="administrator_f1/" method="post">' +\
+        '<input type="submit" value="List of Professors">' +\
+    '</form>' +\
+    '<form action="administrator_f2/" method="post">' +\
+        '<input type="submit" value="Average Salaries">' +\
+    '</form>' +\
+    '<form action="administrator_f3/" method="post">' +\
+        '<input type="submit" value="Number of Students Taught">' +\
     '</form>' +\
     '</body>/' +\
     '</html>'
