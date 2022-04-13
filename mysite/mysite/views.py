@@ -3,7 +3,7 @@ import mysql.connector
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
-my_passward = "" #put your passward here
+my_passward = "Snaildog13!" #put your passward here
 
 def index(request):
     data='<!DOCTYPE html>' +\
@@ -239,11 +239,11 @@ def administrator_f1(request):
     except:
         data = f'<h1>Order Instructors By:</h1>'+\
             '<form action="section" method="post">' +\
-                '<label for="name">Instructor name: </label>' +\
+                '<label for="name">Instructor name </label>' +\
                 '<input type="checkbox" id="name" name="name"><br><br>' +\
-                '<label for="dept">Department: </label>' +\
+                '<label for="dept">Department </label>' +\
                 '<input type="checkbox" id="dept" name="dept"><br><br>' +\
-                '<label for="salary">Salary: </label>' +\
+                '<label for="salary">Salary </label>' +\
                 '<input type="checkbox" id="salary" name="salary"><br><br>' +\
                 '<input type="submit" value="Submit">' +\
             '</form>' +\
