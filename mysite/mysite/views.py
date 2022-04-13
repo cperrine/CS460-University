@@ -218,10 +218,10 @@ def administrator_f2(request):
     data = '<table style="width:400px">'
     for (min,avg, max, dept) in mycursor:
         r = ('<tr>'+\
-            '<th>' + str(min) + '</th>'+\
-            '<th>' + str(avg) + '</th>'+\
-            '<th>' + str(max) + '</th>'+\
-            '<th>' + dept + '</th>'+\
+            '<th>Min:' + str(min) + '</th>'+\
+            '<th>Avg:' + str(avg) + '</th>'+\
+            '<th>Max:' + str(max) + '</th>'+\
+            '<th>Dept:' + dept + '</th>'+\
             '</tr>')
         data += r
     data += '</table>'
