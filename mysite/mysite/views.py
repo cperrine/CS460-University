@@ -198,8 +198,10 @@ def section(request):
         mycursor.close()
         mydb.close()
     return HttpResponse(data)
-
+    
+@csrf_exempt
 def administrator_f2(request):
+
     mydb = mysql.connector.connect(
     host="localhost",
     user="root",
@@ -225,4 +227,52 @@ def administrator_f2(request):
     data += '</table>'
     mycursor.close()
     mydb.close()
+    return HttpResponse(data)
+    
+@csrf_exempt    
+def administrator_f1(request):
+    try:
+        ID = request.POST['ID']
+        name = request.POST['name']
+        dept = request.POST['dept']
+        salary = request.POST['salary']
+    except:
+        data = f'<h1>Order Instructors By:</h1>'+\
+            '<form action="section" method="post">' +\
+                '<label for="name">Instructor name: </label>' +\
+                '<input type="checkbox" id="name" name="name"><br><br>' +\
+                '<label for="dept">Department: </label>' +\
+                '<input type="checkbox" id="dept" name="dept"><br><br>' +\
+                '<label for="salary">Salary: </label>' +\
+                '<input type="checkbox" id="salary" name="salary"><br><br>' +\
+                '<input type="submit" value="Submit">' +\
+            '</form>' +\
+            '</body>/' +\
+            '</html>'
+    else:
+        mydb = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        passwd=my_passward,
+        auth_plugin='mysql_native_password',
+        database="university",
+        )
+
+        mycursor = mydb.cursor()
+        
+        query = f'select ID, name, dept, salary from instructor order by name;'
+        mycursor.execute(query)
+        
+        data += '<table style="width:400px">'
+        for (ID, name, dept, salary) in mycursor:
+            r = ( '<tr>'+\
+                '<th>' + str(ID) + '</th>'+\
+                '<th>' + name + '</th>'+\
+                '<th>' + dept + '</th>'+\
+                '<th>' + str(salary) + '</th>'+\
+                '</tr>' )
+            data += r
+        data += '</table>'
+        mycursor.close()
+        mydb.close()
     return HttpResponse(data)
