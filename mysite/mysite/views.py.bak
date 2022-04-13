@@ -23,7 +23,7 @@ def index(request):
     '</html>'
     return HttpResponse(data)
 
-
+@csrf_exempt
 def administrator_view(request):
     data='<!DOCTYPE html>' +\
     '<html>' +\
