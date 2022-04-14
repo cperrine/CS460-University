@@ -25,6 +25,9 @@ urlpatterns = [
     path('index/', views.index),
     path('administrator_view/administrator_f2/', views.administrator_f2),
     path('administrator_view/administrator_f1/', views.administrator_f1),
+    path('administrator_view/administrator_f1/name/', views.f1name),
+    path('administrator_view/administrator_f1/department/', views.f1department),
+    path('administrator_view/administrator_f1/salary/', views.f1salary),
     path('administrator_view/', views.administrator_view),
     path('instructor/section', views.section),
 ]
