@@ -383,3 +383,53 @@ def f1salary (request):
     mycursor.close()
     mydb.close()
     return HttpResponse(data)
+    
+
+
+@csrf_exempt
+def administrator_f3
+
+    try:
+        ID = request.POST['ID']
+        name = request.POST['name']
+        dept = request.POST['dept']
+        salary = request.POST['salary']
+    except:
+        data = f'<h1>Students in Specific Instructor classes:</h1>'+\
+            '<form action="administrator_f3" method="post">' +\
+                '<label for="instructor_id">Instructor ID: </label>' +\
+                '<input type="text" id="instructor_id" name="instructor_id"><br><br>' +\
+                '<label for="semester">Semester: </label>' +\
+                '<input type="text" id="semester" name="semester"><br><br>' +\
+                '<label for="year">Year: </label>' +\
+                '<input type="text" id="year" name="year"><br><br>' +\
+                '<input type="submit" value="Submit">' +\
+            '</form>' +\
+            '</body>/' +\
+            '</html>'
+    else:
+        mydb = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        passwd=my_passward,
+        auth_plugin='mysql_native_password',
+        database="university",
+        )
+
+        mycursor = mydb.cursor()
+        
+        query = f'
+        mycursor.execute(query)
+        
+        data += '<table style="width:400px">'
+        for (name, dept, id) in mycursor:
+            r = ( '<tr>'+\
+                '<th>' + name + '</th>'+\
+                '<th>' + dept + '</th>'+\
+                '<th>' + str(ID) + '</th>'+\
+                '</tr>' )
+            data += r
+        data += '</table>'
+        mycursor.close()
+        mydb.close()
+    return HttpResponse(data)
