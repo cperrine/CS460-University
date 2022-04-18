@@ -387,27 +387,8 @@ def f1salary (request):
 
 
 @csrf_exempt
-def administrator_f3
+def administrator_f3(request):
 
-    try:
-        ID = request.POST['ID']
-        name = request.POST['name']
-        dept = request.POST['dept']
-        salary = request.POST['salary']
-    except:
-        data = f'<h1>Students in Specific Instructor classes:</h1>'+\
-            '<form action="administrator_f3" method="post">' +\
-                '<label for="instructor_id">Instructor ID: </label>' +\
-                '<input type="text" id="instructor_id" name="instructor_id"><br><br>' +\
-                '<label for="semester">Semester: </label>' +\
-                '<input type="text" id="semester" name="semester"><br><br>' +\
-                '<label for="year">Year: </label>' +\
-                '<input type="text" id="year" name="year"><br><br>' +\
-                '<input type="submit" value="Submit">' +\
-            '</form>' +\
-            '</body>/' +\
-            '</html>'
-    else:
         mydb = mysql.connector.connect(
         host="localhost",
         user="root",
@@ -418,18 +399,25 @@ def administrator_f3
 
         mycursor = mydb.cursor()
         
-        query = f'
+        query = '''select dept, i.ID, i.name, t3.semester, t3.year, t3.student_count 
+        from instructor i join 
+        (select t1.ID, t1.semester, t1.year, count(t2.ID) as student_count from teaches t1 left join takes t2 on t1.course_id = t2.course_id and t1.sec_id = t2.sec_id and t1.semester = t2.semester and t1.year = t2.year group by t1.ID) 
+        as t3 on i.ID = t3.ID;'''
         mycursor.execute(query)
         
-        data += '<table style="width:400px">'
-        for (name, dept, id) in mycursor:
+        data = ''
+        data += '<table style="width:800px">'
+        for (dept, ID, name, semester, year, student_count) in mycursor:
             r = ( '<tr>'+\
-                '<th>' + name + '</th>'+\
                 '<th>' + dept + '</th>'+\
                 '<th>' + str(ID) + '</th>'+\
+                '<th>' + name + '</th>'+\
+                '<th>' + str(semester) + '</th>'+\
+                '<th>' + str(year) + '</th>'+\
+                '<th>' + str(student_count) + '</th>'+\
                 '</tr>' )
             data += r
         data += '</table>'
         mycursor.close()
         mydb.close()
-    return HttpResponse(data)
+        return HttpResponse(data)

@@ -3,7 +3,7 @@ import mysql.connector
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
-my_passward = "" #put your passward here
+my_passward = "Snaildog13!" #put your passward here
 
 def index(request):
     data='<!DOCTYPE html>' +\
@@ -383,3 +383,41 @@ def f1salary (request):
     mycursor.close()
     mydb.close()
     return HttpResponse(data)
+    
+
+
+@csrf_exempt
+def administrator_f3(request):
+
+        mydb = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        passwd=my_passward,
+        auth_plugin='mysql_native_password',
+        database="university",
+        )
+
+        mycursor = mydb.cursor()
+        
+        query = '''select dept, i.ID, i.name, t3.semester, t3.year, t3.student_count 
+        from instructor i join 
+        (select t1.ID, t1.semester, t1.year, count(t2.ID) as student_count from teaches t1 left join takes t2 on t1.course_id = t2.course_id and t1.sec_id = t2.sec_id and t1.semester = t2.semester and t1.year = t2.year group by t1.ID) 
+        as t3 on i.ID = t3.ID;'''
+        mycursor.execute(query)
+        
+        data = ''
+        data += '<table style="width:800px">'
+        for (dept, ID, name, semester, year, student_count) in mycursor:
+            r = ( '<tr>'+\
+                '<th>' + dept + '</th>'+\
+                '<th>' + str(ID) + '</th>'+\
+                '<th>' + name + '</th>'+\
+                '<th>' + str(semester) + '</th>'+\
+                '<th>' + str(year) + '</th>'+\
+                '<th>' + str(student_count) + '</th>'+\
+                '</tr>' )
+            data += r
+        data += '</table>'
+        mycursor.close()
+        mydb.close()
+        return HttpResponse(data)
