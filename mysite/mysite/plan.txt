@@ -13,7 +13,8 @@ COULD ALSO BE A WHERE STATEMENT AND THE USER INPUT IS THE WHERE
 
 
 
-f3 select i.name, i.dept, count(k.id) from takes k, teaches t, instructor i where k.semester = t.id AND k.year = t.year and i.id = t.id and i.name = 'Hou' and k.semester = 1 and k.year = 2020;
+f3 select i.name, k.course_id, k.sec_id, count(k.id) from instructor i, teaches t, takes k WHERE 
+t.course_id = k.course_id AND t.sec_id = k.sec_id AND t.semester = k.semester AND t.year = k.year AND t.id = i.ID;
 
 
 
