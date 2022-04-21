@@ -3,7 +3,7 @@ import mysql.connector
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
-my_passward = "" #put your passward here
+my_passward = "Snaildog13!" #put your passward here
 
 def index(request):
     data='<!DOCTYPE html>' +\
