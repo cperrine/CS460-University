@@ -1,26 +1,73 @@
 from django.http import HttpResponse, HttpResponseRedirect
 import mysql.connector
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.views.decorators.csrf import csrf_exempt
 
-my_passward = "" #put your passward here
+my_passward = "red123HD./" #put your passward here
 
+
+
+
+
+
+
+
+
+
+@csrf_exempt
 def index(request):
-    data='<!DOCTYPE html>' +\
-    '<html>' +\
-    '<body>' +\
-    '<h1>Main Page:</h1>'+\
-    '<form action="student/" method="post">' +\
-        '<input type="submit" value="Student">' +\
-    '</form>' +\
-    '<form action="instructor/" method="post">' +\
-        '<input type="submit" value="Instructor">' +\
-    '</form>' +\
-    '<form action="administrator_view/" method="post">' +\
-        '<input type="submit" value="Admin">' +\
-    '</form>' +\
-    '</body>/' +\
-    '</html>'
+    try:
+        username = request.POST['username']
+        password = request.POST['password']
+    except:
+        data='<!DOCTYPE html>' +\
+            '<html>' +\
+            '<body>' +\
+            '<h1>Login:</h1>'+\
+            '<form action="" method="post">' +\
+                '<label for="username">username: </label>' +\
+                '<input type="text" id="username" name="username"><br><br>' +\
+                '<label for="password">password: </label>' +\
+                '<input type="password" id="password" name="password"><br><br>' +\
+                '<input type="submit" value="Submit">' +\
+            '</form>' +\
+            '</body>/' +\
+            '</html>'
+    else:
+        mydb = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        passwd=my_passward,
+        auth_plugin='mysql_native_password',
+        database="university",
+        )
+        mycursor = mydb.cursor()
+
+        mycursor.execute(f'select * from account where username="{username}" and password="{password}";')
+        
+        #redirect based on access_level
+        for (username, password, access_level) in mycursor:
+            print(access_level)
+            if access_level == 0:
+                mycursor.close()
+                mydb.close()
+                return redirect("student/")
+            if access_level == 1:
+                mycursor.close()
+                mydb.close()
+                return redirect("instructor/")
+            if access_level == 2:
+                mycursor.close()
+                mydb.close()
+                return redirect("administrator_view/")
+        
+        #if sql query returns nothing give access denied page
+        data='<h1>access denied<h1>'
+        mycursor.close()
+        mydb.close()
+        return HttpResponse(data)
+
+    
     return HttpResponse(data)
 
 @csrf_exempt
