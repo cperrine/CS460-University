@@ -3,15 +3,7 @@ import mysql.connector
 from django.shortcuts import redirect, render
 from django.views.decorators.csrf import csrf_exempt
 
-my_passward = "red123HD./" #put your passward here
-
-
-
-
-
-
-
-
+my_passward = "" #put your passward here
 
 
 @csrf_exempt
